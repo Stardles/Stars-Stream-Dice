@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+
+<body style="background-color: green;">
+    <style>
+        .grid-container {
+            background: url('background.png');
+            width: 600px;
+            height: 800px;
+            color: #ecac4c;
+            font-family: Splatoon1;
+            text-align: center;
+            border-radius: 60px;
+        }
+
+        .grid-container>div {
+            border: 200px;
+        }
+
+        .header {
+            font-size: 72px;
+            text-shadow:
+                10px 10px #26285c,
+                -10px 10px #26285c,
+                10px -10px #26285c,
+                -10px -10px #26285c,
+                0px 10px #26285c,
+                -10px 0px #26285c,
+                0px -10px #26285c,
+                10px 0px #26285c;
+        }
+
+        .dice {
+            position: relative;
+            top: -40px;
+            text-align: center;
+            transition: transform .2s;
+            user-select: none;
+        }
+
+        .dice:hover {
+            transform: scale(1.02);
+        }
+
+        .daRoll {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 144px;
+            color: white;
+            cursor: default;
+        }
+
+        .info {
+            position: relative;
+            top: -80px;
+
+            opacity: 1;
+            margin: 10px 50px;
+            line-height: 1.5;
+
+            font-family: splatoon2;
+            font-size: 36px;
+            text-shadow:
+                4px 4px #26285c,
+                -4px 4px #26285c,
+                4px -4px #26285c,
+                -4px -4px #26285c,
+                4px 0px #26285c,
+                -4px 0px #26285c,
+                0px -4px #26285c,
+                0px 4px #26285c;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+    </style>
+
+    <div class="grid-container">
+        <div class="header">Chaos Dice</div>
+        <div class="dice" id="theClicker" onclick="diceControl()">
+            <img src="diceIdle.png" id="imgDice">
+            <div class="daRoll" id="results">❓</div>
+        </div>
+        <div class="info" id="infoId">
+            Roll the dice <br> Recieve a Sims 4 challenge <br> Complete it as soon as possible!
+        </div>
+    </div>
+
+    <script>
+        var diceVar;
+        var result;
+        var resultInfo;
+        var rolling = false;
+
+        var lastResult;
+        var options = [
+            { emoji: "💼", line: "Accept all job offers for the next hour" },
+            { emoji: "💋", line: "Kiss a stranger" },
+            { emoji: "🎉", line: "Throw a party!" },
+            { emoji: "🤝", line: "Hold a club meeting (Make a club if you don't have one)" },
+            { emoji: "😠", line: "Break up a random couple" },
+            { emoji: "🛋️", line: "Design a room in your house around a specific decor item" },
+            { emoji: "🧳", line: "Take in a house guest" },
+            { emoji: "😉", line: "Take in a new roommate" },
+            { emoji: "😎", line: "Go on vacation" },
+            { emoji: "💵", line: "Pass go, collect $2000" },
+            { emoji: "💸", line: "BONUS BILLS, Lose $2000" },
+            { emoji: "👻", line: "Add a new lot challenge" },
+            { emoji: "💄", line: "Give random sim a makeover" },
+            { emoji: "🧛", line: "Change your walk style to creepy" },
+            { emoji: "🧔", line: "Buy a gnome" },
+            { emoji: "🥊", line: "Pick a fight with a stranger" },
+            { emoji: "🧚", line: "Add random lot trait" },
+            { emoji: "🕵️", line: "Place a listening device on someone" },
+            { emoji: "🎅", line: "Create a new holiday. It happens tomorrow (or the next open day)" },
+            { emoji: "🎳", line: "LET'S GO BOWLING!!" },
+            { emoji: "👻", line: "Change your house into a haunted house" },
+            { emoji: "🍽️", line: "Take the full household out for dinner" },
+            { emoji: "🏢", line: "Take the full household out to a community lot" },
+            { emoji: "🪄", line: "Travel to the magic world and fight a wizard" },
+            { emoji: "💆", line: "Give someone a massage" },
+            { emoji: "🥱", line: "Try to throw a really terrible party" },
+            { emoji: "😞", line: "Near bankruptcy, lose 90% of your funds" },
+            { emoji: "🤨", line: "Trap someone on your lot!" },
+        ]
+
+        window.onload = function () {
+            diceVar = document.getElementById('imgDice');
+            result = document.getElementById('results');
+            resultInfo = document.getElementById('infoId');
+        }
+
+        function diceControl() {
+            if (rolling == true) {
+                land();
+            } if (rolling == false) {
+                roll();
+            }
+        }
+
+        //roll();
+        function roll() {
+            diceVar.src = "diceRoll.gif?ts=" + Date.now() + ")";
+            rolling = true;
+            result.style.animation = "fadeOut .01s linear forwards";
+            infoId.style.animation = "fadeOut .05s linear forwards";
+
+            setTimeout(function () {
+                getResults();
+            }, 1000);
+        }
+
+        function getResults() {
+            var newResult = Math.floor(Math.random() * options.length);
+            if (newResult == lastResult) {
+                newResult += 1;
+                if (newResult >= options.length) { newResult -= 2; }
+            }
+
+            let option = options[newResult];
+            result.innerHTML = option.emoji;
+            resultInfo.innerHTML = option.line;
+
+            lastResult = newResult;
+        }
+
+        function land() {
+            diceVar.src = "diceLand.gif?ts=" + Date.now() + ")";
+
+            setTimeout(function () {
+                result.style.animation = "fadeIn .1s linear forwards"
+                infoId.style.animation = "fadeIn .1s linear forwards"
+                diceVar.src = "diceIdle.png"
+                rolling = false;
+            }, 1700);
+        }
+    </script>
+    </input>
+</body>
+
+</html>
